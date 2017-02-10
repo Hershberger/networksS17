@@ -1,5 +1,5 @@
 #Set working directory
-setwd("./CUG")
+library(networksS17)
 
 #load package and data
 library(sna)
@@ -10,18 +10,18 @@ library(network)
 #acquired by the Federal Energy Regulatory Commision after the company's collapse
 #Read http://ceas.cc/2004/168.pdf for more information about the data
 
-#read the dataset 
-enronraw=read.table("Email-Enron.txt") #read an edgelist from text file
+#read the dataset
+enronraw <- read.table("inst/extdata/Email-Enron.txt") #read an edgelist from text file
 
 # since the network is so loarge use subset of the data
 # only using emails between nodes 51-100.
-enron=as.matrix(enronraw[enronraw[,1] %in% 51:100 & enronraw[,2] %in% 51:100, ])
+enron <- as.matrix(enronraw[enronraw[,1] %in% 51:100 & enronraw[,2] %in% 51:100, ])
 
 # Initialize a 50 node network
 net <- network.initialize(50)
 
 # Set matching vertex names
-network.vertex.names(net) = as.character(51:100)
+network.vertex.names(net) <- as.character(51:100)
 
 # convert edge list to character type to make it easy to match in edges
 enron[,1] <- as.character(enron[,1])
@@ -36,7 +36,7 @@ set.seed(1234)
 # test for transitivity in the network (gtrans in the SNA package)
 # control for dyad distribution via dyad.census option
 # Null distribution constructed using 500 draws
-cugResults = cug.test(net, gtrans, cmode="dyad.census",reps=500)
+system.time(cugResults <- cug.test(net, gtrans, cmode = "dyad.census", reps = 500))
 
 # Look at results with just p-values
 cugResults
